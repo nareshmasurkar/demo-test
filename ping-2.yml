@@ -2,9 +2,24 @@
 - name: Ping all hosts
   hosts: all
   gather_facts: yes
+  
   tasks:
     - name: Ping the machine
       ansible.builtin.ping:
+   
     - name: Print all available facts
       ansible.builtin.debug:
         var: ansible_facts
+    
+    - name: Create destination directory
+      ansible.builtin.file:
+        path: "/home/dc-user/artifact-download"
+        state: directory
+        mode: '0755'
+
+    - name: Download the artifact
+      ansible.builtin.get_url:
+        url: "https://artifacts.mastercard.int:443/artifactory/releases/com/mastercard/ess/dispute_mcom_flyway_mtf/31-RELEASE/dispute_mcom_flyway_mtf-31-RELEASE.zip"
+        dest: "/home/dc-user/artifact-download"
+        mode: '0644'
+        # force: yes  # set to 'no' to skip if file exists
